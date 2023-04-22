@@ -18,8 +18,6 @@ describe('Register.service', () => {
       password: '123456',
     })
 
-    console.log(user)
-
     expect(user.id).toEqual(expect.any(String))
   })
 
@@ -45,13 +43,12 @@ describe('Register.service', () => {
       password: '123456',
     })
 
-    expect(
-      async () =>
-        await registerService.execute({
-          email: 'test@test.com',
-          name: 'test',
-          password: '123456',
-        }),
+    await expect(() =>
+      registerService.execute({
+        email: 'test@test.com',
+        name: 'test',
+        password: '123456',
+      }),
     ).rejects.toBeInstanceOf(EmailAlreadyExistsError)
   })
 })
