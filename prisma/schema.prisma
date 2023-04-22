@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String
+  email         String   @unique
+  password_hash String
+  created_at    DateTime @default(now())
+  Report        Report[]
+  avatar        String
+
+  @@map("users")
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  created_at  DateTime @default(now())
+  description String?
+  status      String
+  local_image String
+
+  collect_point  CollectPoint @relation(fields: [collectPointId], references: [id])
+  collectPointId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@map("reports")
+}
+
+model CollectPoint {
+  id                              String   @id @default(cuid())
+  name                            String
+  description                     String?
+  phone                           String?
+  lat                             Decimal
+  long                            Decimal
+  initial_collect_time_in_minutes Int
+  final_collect_time_in_minutes   Int
+  dates_of_collect                Int[]
+  collect_types                   String[]
+  local_images                    String[]
+  adress                          String
+
+  street String
+  city String
+  state String
+  CEP String
+  country String
+
+  reports Report[]
+
+  @@map("collect_points")
+}
