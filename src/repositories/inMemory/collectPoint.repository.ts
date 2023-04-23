@@ -1,9 +1,32 @@
 import { Prisma, CollectPoint } from '@prisma/client'
-import { ICollectPointRepository } from '../ICollectPoint.repository'
+import {
+  ICollectPointRepository,
+  IFindManyNearbyParams,
+} from '../ICollectPoint.repository'
 import { Decimal } from '@prisma/client/runtime'
 import crypto from 'node:crypto'
+import { getDistanceBetweenCoordinatesInKM } from '@/utils/getDistanceBetweenCoordinates'
 export class InMemoryCollectPointRepository implements ICollectPointRepository {
   public collectPoints: CollectPoint[] = []
+
+  async findManyNearby(
+    coordinates: IFindManyNearbyParams,
+  ): Promise<CollectPoint[]> {
+    return this.collectPoints.filter((collectPoint) => {
+      const distance = getDistanceBetweenCoordinatesInKM(
+        {
+          latitude: coordinates.latitude,
+          longitude: coordinates.longitude,
+        },
+        {
+          latitude: collectPoint.lat.toNumber(),
+          longitude: collectPoint.long.toNumber(),
+        },
+      )
+
+      return distance <= 10
+    })
+  }
 
   async create(data: Prisma.CollectPointCreateInput): Promise<CollectPoint> {
     const collectPoint: CollectPoint = {

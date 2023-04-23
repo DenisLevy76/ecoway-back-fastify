@@ -2,7 +2,7 @@ import fastify from 'fastify'
 import { appRoutes } from './http/routes'
 import { ZodError } from 'zod'
 import { env } from './env'
-import { clerkClient, clerkPlugin, getAuth } from '@clerk/fastify'
+import { clerkPlugin } from '@clerk/fastify'
 
 export const app = fastify()
 
