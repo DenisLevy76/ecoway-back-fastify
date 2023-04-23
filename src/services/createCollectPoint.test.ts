@@ -1,54 +1,34 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { compare } from 'bcryptjs'
-import { RegisterUserService } from './registerUser.service'
-import { InMemoryUsersRepository } from '@/repositories/inMemory/users.repository'
-import { EmailAlreadyExistsError } from './errors/emailAlreadyExists.error'
+import { CreateCollectPointService } from './createCollectPoint.service'
+import { InMemoryCollectPointRepository } from '@/repositories/inMemory/collectPoint.repository'
 
-let registerService: RegisterUserService
+let createCollectPoint: CreateCollectPointService
 
 describe('Register.service', () => {
   beforeEach(() => {
-    registerService = new RegisterUserService(new InMemoryUsersRepository())
-  })
-
-  it('should be able to register a user', async () => {
-    const { user } = await registerService.execute({
-      email: 'test@test.com',
-      name: 'test',
-      password: '123456',
-    })
-
-    expect(user.id).toEqual(expect.any(String))
-  })
-
-  it('should create a hash from user password upon registration', async () => {
-    const { user } = await registerService.execute({
-      email: 'test@test.com',
-      name: 'test',
-      password: '123456',
-    })
-
-    const isPasswordCorrectlyHashed = await compare(
-      '123456',
-      user.password_hash,
+    createCollectPoint = new CreateCollectPointService(
+      new InMemoryCollectPointRepository(),
     )
-
-    expect(isPasswordCorrectlyHashed).toEqual(true)
   })
 
-  it('should not be able to register with same email twice', async () => {
-    await registerService.execute({
-      email: 'test@test.com',
-      name: 'test',
-      password: '123456',
+  it('should be able to create a new collect point.', async () => {
+    const { collectPoint } = await createCollectPoint.execute({
+      name: 'UNAMA - Alcindo Cacela',
+      CEP: '66060-902',
+      city: 'belém',
+      collect_types: ['metal', 'glass'],
+      country: 'brazil',
+      state: 'pa',
+      dates_of_collect: [1, 5],
+      final_collect_time_in_minutes: 540,
+      initial_collect_time_in_minutes: 600,
+      lat: -1.3801938,
+      long: -49.5232044,
+      local_images: [],
+      street: 'Av. Alcindo Cacela, 287',
     })
 
-    await expect(() =>
-      registerService.execute({
-        email: 'test@test.com',
-        name: 'test',
-        password: '123456',
-      }),
-    ).rejects.toBeInstanceOf(EmailAlreadyExistsError)
+    expect(collectPoint.id).toEqual(expect.any(String))
+    expect(collectPoint.name).toEqual('UNAMA - Alcindo Cacela')
   })
 })
