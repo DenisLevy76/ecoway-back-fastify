@@ -4,7 +4,7 @@ import { InMemoryCollectPointRepository } from '@/repositories/inMemory/collectP
 
 let createCollectPoint: CreateCollectPointService
 
-describe('Register.service', () => {
+describe('createCollectPoint.service', () => {
   beforeEach(() => {
     createCollectPoint = new CreateCollectPointService(
       new InMemoryCollectPointRepository(),
