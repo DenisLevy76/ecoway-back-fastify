@@ -46,8 +46,8 @@ describe('ListNearbyCollectPoints service.', () => {
     })
 
     const { collectPoints } = await sut.execute({
-      userLat: -1.3801938,
-      userLong: -49.5232044,
+      userLatitude: -1.3801938,
+      userLongitude: -49.5232044,
     })
 
     expect(collectPoints).toEqual([

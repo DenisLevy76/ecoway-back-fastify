@@ -1,11 +1,9 @@
 import { FastifyInstance } from 'fastify'
-import { registerUserController } from '../controllers/registerUser.controller'
-import { authenticateController } from '../controllers/authenticate.controller'
+import { listNearbyCollectPointsController } from '../controllers/listNearbyCollectPoints.controller'
 import { protectedRouteMiddleware } from '@/middlewares/protectedRoute'
 
 export const appRoutes = async (app: FastifyInstance) => {
-  app.post('/users', registerUserController)
-  app.post('/sessions', authenticateController)
+  app.get('/collect-points', listNearbyCollectPointsController)
   app.post('/collect-points', () => {})
   app.post('/reports', { preHandler: [protectedRouteMiddleware] }, () => {})
 }
